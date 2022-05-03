@@ -12,6 +12,7 @@ const renderer = new THREE.WebGLRenderer({
   canvas: document.querySelector('#bg'),
 });
 
+
 renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setSize(window.innerWidth, window.innerHeight);
 camera.position.setZ(30);
@@ -22,8 +23,12 @@ renderer.render(scene, camera);
 // Torus
 
 const geometry = new THREE.TorusGeometry(10, 3, 16, 100);
-const material = new THREE.MeshStandardMaterial({ color: 0xff6347 });
+const material = new THREE.MeshStandardMaterial({ color: 100000 });
 const torus = new THREE.Mesh(geometry, material);
+
+torus.setColor = function(color){
+  torus.material.color.set(color);
+}
 
 scene.add(torus);
 
@@ -73,7 +78,7 @@ scene.add(josh);
 
 // Moon
 
-const moonTexture = new THREE.TextureLoader().load('mars.png');
+const moonTexture = new THREE.TextureLoader().load('moon.jpg');
 const normalTexture = new THREE.TextureLoader().load('normal.jpg');
 
 const moon = new THREE.Mesh(
@@ -88,6 +93,26 @@ scene.add(moon);
 
 moon.position.z = 30;
 moon.position.setX(-10);
+
+// Earth
+
+const earthTexture = new THREE.TextureLoader().load('earth.jpg');
+
+const earth = new THREE.Mesh(
+  new THREE.SphereGeometry(8, 32, 32),
+  new THREE.MeshStandardMaterial({
+    map: earthTexture,
+    normalMap: normalTexture,
+  })
+);
+
+scene.add(earth);
+
+earth.position.z = 40;
+earth.position.setX(-18);
+
+
+
 
 josh.position.z = -5;
 josh.position.x = 2;
@@ -112,18 +137,27 @@ document.body.onscroll = moveCamera;
 moveCamera();
 
 // Animation Loop
+let torus_color = 100000;
+
 
 function animate() {
   requestAnimationFrame(animate);
-
+  
   torus.rotation.x += 0.01;
   torus.rotation.y += 0.005;
   torus.rotation.z += 0.01;
+  
+  torus_color += 1;
+  torus.setColor(torus_color);
+  if (torus_color >= 16777216) {
+    torus_color = 1; 
+  }
 
   moon.rotation.x += 0.005;
+  earth.rotation.x += 0.005;
 
   // controls.update();
-
+  
   renderer.render(scene, camera);
 }
 
