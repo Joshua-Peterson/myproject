@@ -1,6 +1,8 @@
 import './style.css';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import Planet from './planet';
+import Rotation from './rotation';
 
 // Setup
 
@@ -22,7 +24,7 @@ renderer.render(scene, camera);
 
 // Torus
 
-const geometry = new THREE.TorusGeometry(10, 3, 16, 100);
+const geometry = new THREE.TorusGeometry(10, 2.5, 16, 100);
 const material = new THREE.MeshStandardMaterial({ color: 100000 });
 const torus = new THREE.Mesh(geometry, material);
 
@@ -42,11 +44,15 @@ scene.add(pointLight, ambientLight);
 
 // Helpers
 
-// const lightHelper = new THREE.PointLightHelper(pointLight)
-// const gridHelper = new THREE.GridHelper(200, 50);
+//const lightHelper = new THREE.PointLightHelper(pointLight)
+//const gridHelper = new THREE.GridHelper(200, 50);
 // scene.add(lightHelper, gridHelper)
+//scene.add(gridHelper)
 
 // const controls = new OrbitControls(camera, renderer.domElement);
+const controls = new OrbitControls(camera, document.querySelector('.parent'));
+//controls.autoRotate = true;
+
 
 function addStar() {
   const geometry = new THREE.SphereGeometry(0.25, 24, 24);
@@ -136,6 +142,7 @@ function moveCamera() {
 document.body.onscroll = moveCamera;
 moveCamera();
 
+
 // Animation Loop
 let torus_color = 100000;
 
@@ -156,7 +163,7 @@ function animate() {
   moon.rotation.x += 0.005;
   earth.rotation.x += 0.005;
 
-  // controls.update();
+  controls.update();
   
   renderer.render(scene, camera);
 }
